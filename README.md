@@ -2,7 +2,6 @@
 
 ## Project info
 
-**URL**: https://lovable.dev/projects/ddf0537a-8ae4-49a3-bb45-dbed02ece2c4
 
 ## How can I edit this code?
 
@@ -10,7 +9,6 @@ There are several ways of editing your application.
 
 **Use Lovable**
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/ddf0537a-8ae4-49a3-bb45-dbed02ece2c4) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
@@ -60,9 +58,7 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/ddf0537a-8ae4-49a3-bb45-dbed02ece2c4) and click on Share -> Publish.
 
 ## Can I connect a custom domain to my Lovable project?
 
@@ -70,6 +66,7 @@ Yes, you can!
 
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
+<<<<<<< HEAD
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
 
 
@@ -141,3 +138,5 @@ Rajshree Ethos is a full-stack e-commerce application specializing in premium In
 ### Prerequisites
 - Node.js and npm installed
 - MongoDB instance (local or Atlas)
+=======
+>>>>>>> f29d06175599a3c0abfc4dad24ba6776db264f34
