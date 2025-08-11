@@ -31,9 +31,8 @@ const Signup = () => {
   };
 
   const validatePassword = (password: string) => {
-    // At least 8 characters, 1 uppercase, 1 lowercase, 1 number
-    const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    return re.test(password);
+    // No complexity requirements - any password is valid
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,19 +84,25 @@ const Signup = () => {
     }
 
     try {
-      // Simulate signup process
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-      
-      // Store registration in localStorage (for demo purposes)
-      const users = JSON.parse(localStorage.getItem("registeredUsers") || "[]");
-      users.push({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        phone: formData.phone,
-        registeredAt: new Date().toISOString()
+      // Call the backend API to register the user
+      const response = await fetch('http://localhost:5000/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          password: formData.password,
+          phone: formData.phone
+        }),
       });
-      localStorage.setItem("registeredUsers", JSON.stringify(users));
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Registration failed');
+      }
       
       toast({
         title: "Account Created Successfully!",
@@ -108,7 +113,7 @@ const Signup = () => {
     } catch (error) {
       toast({
         title: "Signup Failed",
-        description: "Something went wrong. Please try again.",
+        description: error.message || "Something went wrong. Please try again.",
         variant: "destructive",
       });
     } finally {

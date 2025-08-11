@@ -24,6 +24,11 @@ const ProductSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add an image']
   },
+  // Add this new field for storing Base64 image data
+  imageData: {
+    type: String,
+    // Not required as we'll keep the image field for backward compatibility
+  },
   category: {
     type: String,
     required: [true, 'Please add a category'],
@@ -40,7 +45,7 @@ const ProductSchema = new mongoose.Schema({
     enum: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Free Size'],
     default: ['Free Size']
   },
-  isNew: {
+  isNewArrival: {
     type: Boolean,
     default: false
   },

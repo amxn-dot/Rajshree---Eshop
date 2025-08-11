@@ -93,7 +93,7 @@ exports.adminLogin = async (req, res) => {
       });
     }
 
-    // Check for user
+    // Check for user with admin role
     const user = await User.findOne({ email, role: 'admin' }).select('+password');
 
     if (!user) {
@@ -115,6 +115,7 @@ exports.adminLogin = async (req, res) => {
 
     sendTokenResponse(user, 200, res);
   } catch (err) {
+    console.error('Admin login error:', err);
     res.status(500).json({
       success: false,
       message: err.message

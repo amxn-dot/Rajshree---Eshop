@@ -146,11 +146,34 @@ const AdminDashboard = () => {
     try {
       // Handle image upload if it's a file
       let imageUrl = newProduct.image;
+      // In the handleAddProduct function, update this part:
       if (imageFile) {
-        const formData = new FormData();
-        formData.append('image', imageFile);
-        const uploadResponse = await productService.uploadProductImage(formData);
-        imageUrl = uploadResponse.data.imageUrl;
+        try {
+          const formData = new FormData();
+          formData.append('image', imageFile);
+          const uploadResponse = await productService.uploadProductImage(formData);
+          imageUrl = uploadResponse.data.imageUrl;
+          
+          // Add this line to use the base64 image data
+          const imageData = uploadResponse.data.imageData;
+          
+          // Create the new product object with imageData
+          const productToAdd = {
+            name: newProduct.name || "",
+            price: newProduct.price || 0,
+            originalPrice: newProduct.originalPrice,
+            image: imageUrl,
+            imageData: imageData, // Add this line
+            category: newProduct.category || "Dress Materials",
+            sizes: newProduct.sizes || ["Free Size"],
+            inventory: newProduct.inventory || 0,
+            description: newProduct.description,
+          };
+          
+          // Rest of the function remains the same
+        } catch (error) {
+          // Error handling
+        }
       }
 
       // Create the new product object

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, CreditCard } from "lucide-react";
 
 const Footer = () => {
   const customerService = [
@@ -168,24 +168,13 @@ const Footer = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-elegant text-center md:text-left">
-              © 2024 RajShree Emporium. All rights reserved.
+              &copy; 2024 RajShree Emporium. All rights reserved.
             </p>
-            <div className="flex items-center space-x-6">
-              <img
-                src="https://via.placeholder.com/40x25/333/fff?text=VISA"
-                alt="Visa"
-                className="h-6 opacity-70"
-              />
-              <img
-                src="https://via.placeholder.com/40x25/333/fff?text=MC"
-                alt="Mastercard"
-                className="h-6 opacity-70"
-              />
-              <img
-                src="https://via.placeholder.com/40x25/333/fff?text=UPI"
-                alt="UPI"
-                className="h-6 opacity-70"
-              />
+            <div className="flex items-center space-x-4 text-muted-foreground">
+              <CreditCard className="h-8 w-8" />
+              <p className="font-semibold">VISA</p>
+              <p className="font-semibold">MasterCard</p>
+              <p className="font-semibold">UPI</p>
             </div>
           </div>
         </div>

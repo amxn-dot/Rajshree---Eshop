@@ -115,7 +115,18 @@ exports.createProduct = async (req, res) => {
   try {
     // Handle file upload
     if (req.file) {
+      // Set the image path for backward compatibility
       req.body.image = `/uploads/${req.file.filename}`;
+      
+      // Read the file as binary data
+      const filePath = path.join(__dirname, '..', 'uploads', req.file.filename);
+      const imageBuffer = fs.readFileSync(filePath);
+      
+      // Convert to base64 and store in the imageData field
+      req.body.imageData = `data:${req.file.mimetype};base64,${imageBuffer.toString('base64')}`;
+      
+      // Remove the file from the filesystem since we now have it in memory
+      fs.unlinkSync(filePath);
     }
 
     const product = await Product.create(req.body);

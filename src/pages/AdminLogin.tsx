@@ -5,63 +5,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
-
-// Pre-defined admin credentials
-const ADMIN_CREDENTIALS = {
-  id: "admin@rajshree.com",
-  password: "RajShree@Admin2024"
-};
+import { useAuth } from "@/contexts/AuthContext";
 
 const AdminLogin = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const { adminLogin, isLoading, error } = useAuth();
   const [formData, setFormData] = useState({
-    adminId: "",
+    email: "",
     password: "",
   });
-  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setLoginError(""); // Clear previous errors
-
     try {
-      // Simulate login process
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      // Check admin credentials
-      if (formData.adminId === ADMIN_CREDENTIALS.id && formData.password === ADMIN_CREDENTIALS.password) {
-        toast({
-          title: "Admin Login Successful!",
-          description: "Welcome to RajShree Emporium Admin Panel",
-        });
-        
-        // Store admin session (in real app, use secure storage)
-        localStorage.setItem("isAdminLoggedIn", "true");
-        localStorage.setItem("adminId", formData.adminId);
-        
-        navigate("/admin/dashboard");
-      } else {
-        setLoginError("Incorrect Admin ID or Password. Please try again.");
-        toast({
-          title: "Invalid Credentials",
-          description: "Incorrect Admin ID or Password. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      setLoginError("Something went wrong. Please try again.");
-      toast({
-        title: "Login Failed",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
+      await adminLogin(formData.email, formData.password);
+      // The adminLogin function in AuthContext will handle navigation on success
+    } catch (err) {
+      // Error is handled and displayed by AuthContext
+      console.error("Admin login failed", err);
     }
   };
 
@@ -111,15 +73,15 @@ const AdminLogin = () => {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Admin ID Field */}
               <div className="space-y-2">
-                <Label htmlFor="adminId">Admin ID</Label>
+                <Label htmlFor="email">Admin Email</Label>
                 <div className="relative">
                   <Shield className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                   <Input
-                    id="adminId"
-                    name="adminId"
-                    type="text"
-                    placeholder="Enter admin ID"
-                    value={formData.adminId}
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="Enter admin email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className="pl-10"
                     required
@@ -152,11 +114,11 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              {/* Error Message */}
-              {loginError && (
+              {/* Error Message from context */}
+              {error && (
                 <div className="p-3 rounded-md bg-destructive/10 text-destructive text-sm">
-                  <p className="font-medium">Invalid Credentials</p>
-                  <p>Incorrect Admin ID or Password. Please try again.</p>
+                  <p className="font-medium">Login Failed</p>
+                  <p>{error}</p>
                 </div>
               )}
 
@@ -174,7 +136,7 @@ const AdminLogin = () => {
             <div className="mt-6 p-4 bg-muted/50 rounded-lg border border-border/50">
               <h4 className="font-semibold text-sm mb-2 text-primary">Demo Admin Credentials:</h4>
               <div className="space-y-1 text-sm text-muted-foreground">
-                <p><strong>ID:</strong> admin@rajshree.com</p>
+                <p><strong>Email:</strong> admin@rajshree.com</p>
                 <p><strong>Password:</strong> RajShree@Admin2024</p>
               </div>
             </div>

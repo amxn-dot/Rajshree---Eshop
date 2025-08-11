@@ -13,7 +13,7 @@ import ProductCard from "@/components/ProductCard";
 import lehengaProduct from "@/assets/lehenga-product.jpg";
 import kurtaProduct from "@/assets/kurta-product.jpg";
 import sareeProduct from "@/assets/saree-product.jpg";
-import { productService } from "@/services/api";
+import { productService } from "@/services/productService";
 
 const Products = () => {
   const navigate = useNavigate();
@@ -81,9 +81,9 @@ const Products = () => {
   const filteredProducts = allProducts.filter((product) => {
     const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category);
     const matchesPrice = product.price >= priceRange[0] && product.price <= priceRange[1];
-    const matchesSize = selectedSizes.length === 0 || product.sizes.some(size => selectedSizes.includes(size));
+    // const matchesSize = selectedSizes.length === 0 || product.sizes.some(size => selectedSizes.includes(size));
     
-    return matchesCategory && matchesPrice && matchesSize;
+    return matchesCategory && matchesPrice;
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
@@ -161,6 +161,10 @@ const Products = () => {
       </div>
     </div>
   );
+
+  function handleProductClick(_id: any): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -260,13 +264,28 @@ const Products = () => {
             }`}>
               {sortedProducts.map((product, index) => (
                 <div
-                  key={product.id}
+                  key={product._id}
                   className="animate-fade-in"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <ProductCard
-                    {...product}
-                    onClick={() => navigate(`/product/${product.id}`)}
+                  // When mapping through products to render ProductCard components
+                  // Make sure you're passing the imageData prop
+                  <ProductCard 
+                    key={product._id}
+                    id={product._id}
+                    name={product.name}
+                    price={product.price}
+                    originalPrice={product.originalPrice}
+                    image={product.image}
+                    imageData={product.imageData} // Add this line
+                    rating={product.rating || 0}
+                    reviews={product.reviews?.length || 0}
+                    category={product.category}
+                    isNew={product.isNewArrival}
+                    isSale={product.discount > 0}
+                    discount={product.discount}
+                    sizes={product.sizes}
+                    onClick={() => handleProductClick(product._id)}
                   />
                 </div>
               ))}

@@ -9,6 +9,7 @@ const {
 const { protect, authorize } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Set up multer storage
 const storage = multer.diskStorage({
@@ -46,6 +47,39 @@ const upload = multer({
 });
 
 const router = express.Router();
+
+// Add this new route for image uploads with MongoDB storage
+router.post('/upload', protect, authorize('admin'), upload.single('image'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please upload an image'
+      });
+    }
+    
+    // Read the file as binary data
+    const filePath = path.join(__dirname, '..', 'uploads', req.file.filename);
+    const imageBuffer = fs.readFileSync(filePath);
+    
+    // Convert to base64
+    const base64Image = `data:${req.file.mimetype};base64,${imageBuffer.toString('base64')}`;
+    
+    // Remove the file from the filesystem since we now have it in memory
+    fs.unlinkSync(filePath);
+    
+    res.status(200).json({
+      success: true,
+      imageUrl: req.file.filename, // For backward compatibility
+      imageData: base64Image // The actual base64 data
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message
+    });
+  }
+});
 
 router
   .route('/')
